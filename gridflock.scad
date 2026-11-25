@@ -425,7 +425,9 @@ module cutter(size, below=0) {
 module cell_core(unit_size=[1, 1]) {
     size = [BASEPLATE_DIMENSIONS.x*unit_size.x, BASEPLATE_DIMENSIONS.y*unit_size.y];
     difference() {
-        translate([-size.x/2, -size.y/2, -0.001]) cube([size.x, size.y, _total_height + 0.002]);
+        // stop hollow_wall below the top. Along the grid lines the 45° roof already does that, but where
+        // the rounded cell corners meet, the plate top is flat and the core would come out through it
+        translate([-size.x/2, -size.y/2, -0.001]) cube([size.x, size.y, min(_total_height, _profile_height_raw - hollow_wall) + 0.001]);
         cutter([size.x + hollow_wall*2, size.y + hollow_wall*2]);
     }
 }
